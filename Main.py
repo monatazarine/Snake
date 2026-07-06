@@ -23,8 +23,7 @@ SCREEN_BG_COLOR = (41,47,86)
 
 # Frame rate limiter (keeps CPU cool)
 CLOCK = pygame.time.Clock()
-my_egg = Egg()  
-my_snake = Snake()         
+   
 
 #the Button (x, y, width, height)
 ST_button = pygame.Rect(325, 260, 150, 50)
@@ -43,10 +42,12 @@ running = True
 
 def game_loop():
     global playing, running      
+    my_egg = Egg()  
+    my_snake = Snake()      
 
        
     while  playing:
-           CLOCK.tick(60)  #controls the speed # : run at a maximum of 60 frames per second.
+           CLOCK.tick(10)  #controls the speed # : run at a maximum of 60 frames per second.
            
            screen.fill((0, 0, 0))
            for event in pygame.event.get():
@@ -73,32 +74,42 @@ def game_loop():
            #check if the snake has hit the wall
            hit_wall = not (0 <= head_x < SCREEN_WIDTH and 0 <= head_y < SCREEN_HEIGHT)    
            if hit_wall:
+                print("Game Over!")  
+                pygame.time.delay(500)  # Pause for half a second before ending the game
                 playing = False
-                print("Game Over!")   
-           for segment in my_snake.body[1:]:  # Check for collision with itself
-              if head_x == segment[0] and head_y == segment[1]:
-                 playing = False
-                 print("Game Over!")
+                break
+                 
+             # Check for collision with itself
+           if my_snake.speed_x != 0 or my_snake.speed_y != 0:  # Only check for self-collision if the snake is moving     
+               for segment in my_snake.body[1:]:
+                  if head_x == segment[0] and head_y == segment[1]:
+                     playing = False
+                     print("Game Over!")
            #EGG COLLISION LOGIC
            snake_rect = pygame.Rect(head_x, head_y, my_snake.width, my_snake.height)
            Egg_rect = pygame.Rect(my_egg.x - my_egg.radius, my_egg.y - my_egg.radius, my_egg.radius * 2, my_egg.radius * 2)
            if snake_rect.colliderect(Egg_rect): 
-              print("Nom!")
-              my_egg.reset()
-              my_snake.grow()  
+              if my_snake.speed_x != 0 or my_snake.speed_y != 0:  # Only grow if the snake is moving
+               print("Nom!")
+               my_egg.reset()
+               my_snake.grow()  
                           
            if playing:
              screen.fill((0, 0, 0))
              my_egg.draw(screen)  
              my_snake.draw(screen)
-             pygame.display.update()   
+             pygame.display.update()  
+              
+           if not playing:
+             pygame.time.delay(500) 
+             break   
 
 
 
 #Loop: Without it, the Python script would execute
 # flash a window, and instantly close. The loop keeps the program running.
 while running:
-    CLOCK.tick(60)  
+    CLOCK.tick(10)  
     # current mouse position
     mouse_pos = pygame.mouse.get_pos()
     
