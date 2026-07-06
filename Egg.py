@@ -5,7 +5,7 @@ import random
 
 class Egg:
     def __init__(self):
-        self.radius = 15 #dimension 
+        self.radius = 11 #dimension 
         self.x = 400
         self.y = 100
         self.color = (255, 230, 150) 

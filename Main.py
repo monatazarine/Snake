@@ -83,8 +83,12 @@ def game_loop():
            if my_snake.speed_x != 0 or my_snake.speed_y != 0:  # Only check for self-collision if the snake is moving     
                for segment in my_snake.body[1:]:
                   if head_x == segment[0] and head_y == segment[1]:
-                     playing = False
                      print("Game Over!")
+                     playing = False
+                     break
+           if not playing:
+             pygame.time.delay(500) 
+             break           
            #EGG COLLISION LOGIC
            snake_rect = pygame.Rect(head_x, head_y, my_snake.width, my_snake.height)
            Egg_rect = pygame.Rect(my_egg.x - my_egg.radius, my_egg.y - my_egg.radius, my_egg.radius * 2, my_egg.radius * 2)
@@ -94,15 +98,13 @@ def game_loop():
                my_egg.reset()
                my_snake.grow()  
                           
-           if playing:
-             screen.fill((0, 0, 0))
-             my_egg.draw(screen)  
-             my_snake.draw(screen)
-             pygame.display.update()  
+
+           screen.fill((0, 0, 0))
+           my_egg.draw(screen)  
+           my_snake.draw(screen)
+           pygame.display.update()  
               
-           if not playing:
-             pygame.time.delay(500) 
-             break   
+
 
 
 
