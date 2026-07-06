@@ -40,31 +40,31 @@ EX_text_rect = EX_button_text.get_rect(center=EX_button.center)
 
 
 
-playing = False
+alive = False
 running = True
 def game_loop():
-    global playing, running      
+    global alive, running      
 
        
-    while  playing:
+    while  alive:
            CLOCK.tick(60)  #controls the speed # : run at a maximum of 60 frames per second.
            
            screen.fill((0, 0, 0))
            for event in pygame.event.get():
               if event.type == pygame.QUIT:
-                 playing = False
+                 alive = False
                  running = False
               if event.type == pygame.KEYDOWN:
-                 if event.key == pygame.K_UP:
+                 if event.key == pygame.K_UP and my_snake.speed_y != 1:  # Prevent moving in the opposite direction
                     my_snake.speed_x = 0
                     my_snake.speed_y = -1 # Move Up
-                 elif event.key == pygame.K_DOWN:
+                 elif event.key == pygame.K_DOWN and my_snake.speed_y != -1:
                     my_snake.speed_x = 0
                     my_snake.speed_y = 1  # Move Down
-                 elif event.key == pygame.K_LEFT:
+                 elif event.key == pygame.K_LEFT and my_snake.speed_x != 1:
                     my_snake.speed_x = -1 # Move Left
                     my_snake.speed_y = 0
-                 elif event.key == pygame.K_RIGHT:
+                 elif event.key == pygame.K_RIGHT and my_snake.speed_x != -1:
                     my_snake.speed_x = 1  # Move Right
                     my_snake.speed_y = 0
                     
@@ -72,7 +72,7 @@ def game_loop():
            #check if the snake has hit the wall
            hit_wall = not (0 <= my_snake.x < SCREEN_WIDTH and 0 <= my_snake.y < SCREEN_HEIGHT)    
            if hit_wall:
-                playing = False
+                alive = False
                 print("Game Over!")  
            #check if the snake has eaten the egg      
            HEAD = pygame.Rect(my_snake.x, my_snake.y, my_snake.width, my_snake.height)
@@ -80,7 +80,9 @@ def game_loop():
            if HEAD.colliderect(EGG):
                    my_egg.reset()
                   
-           if playing:
+                 
+                  
+           if alive:
              screen.fill((0, 0, 0))
              my_egg.draw(screen)  
              my_snake.draw(screen)
@@ -106,7 +108,7 @@ while running:
             if event.button == 1:  # Left mouse button
               if ST_button.collidepoint(mouse_pos):
                  print("Start button clicked!")  
-                 playing = True
+                 alive = True
                  game_loop()    
               if EX_button.collidepoint(mouse_pos):
                  print("Exit button clicked!")
