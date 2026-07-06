@@ -1,9 +1,18 @@
 
 import pygame
 import sys
+from Egg import Egg
+from Snake import Snake
 
 pygame.init()
 
+
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  #creates the window
+
+pygame.display.set_caption("Snake Game")  
 
 WHITE = (255, 255, 255)
 ST_BUTTON_COLOR = (105, 232, 130)
@@ -11,11 +20,11 @@ ST_BUTTON_HOVER_COLOR = (172, 250, 112)
 EX_BUTTON_COLOR = (255, 0, 0)
 EX_BUTTON_HOVER_COLOR = (144, 8, 26)
 SCREEN_BG_COLOR = (41,47,86)
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+
 # Frame rate limiter (keeps CPU cool)
 CLOCK = pygame.time.Clock()
-
+my_egg = Egg()  
+my_snake = Snake()         
 
 #the Button (x, y, width, height)
 ST_button = pygame.Rect(325, 260, 150, 50)
@@ -27,31 +36,50 @@ text_rect = ST_button_text.get_rect(center=ST_button.center)
 EX_button_text = pygame.font.SysFont(None, 36).render("Exit", True, WHITE)
 EX_text_rect = EX_button_text.get_rect(center=EX_button.center)
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))  #creates the window
 
-pygame.display.set_caption("Snake Game")  
 
 playing = False
 running = True
 
 def game_loop():
     global playing, running      
-    
+
        
     while  playing:
            CLOCK.tick(60)  #controls the speed # : run at a maximum of 60 frames per second.
            
            screen.fill((0, 0, 0))
-           pygame.display.update()   
-          
-           
-           pygame.display.update()
-           
            for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-             playing = False  
-             running = False
-             
+              if event.type == pygame.QUIT:
+                 playing = False
+                 running = False
+              if event.type == pygame.KEYDOWN:
+                 if event.key == pygame.K_UP:
+                    my_snake.speed_x = 0
+                    my_snake.speed_y = -1 # Move Up
+                 elif event.key == pygame.K_DOWN:
+                    my_snake.speed_x = 0
+                    my_snake.speed_y = 1  # Move Down
+                 elif event.key == pygame.K_LEFT:
+                    my_snake.speed_x = -1 # Move Left
+                    my_snake.speed_y = 0
+                 elif event.key == pygame.K_RIGHT:
+                    my_snake.speed_x = 1  # Move Right
+                    my_snake.speed_y = 0
+                    
+           my_snake.move()         
+           #check if the snake has hit the wall
+           hit_wall = not (0 <= my_snake.x < SCREEN_WIDTH and 0 <= my_snake.y < SCREEN_HEIGHT)    
+           if hit_wall:
+                playing = False
+                print("Game Over!")   
+                  
+           if playing:
+             screen.fill((0, 0, 0))
+             my_egg.draw(screen)  
+             my_snake.draw(screen)
+             pygame.display.update()   
+
 
 
 #Loop: Without it, the Python script would execute
