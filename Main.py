@@ -54,26 +54,39 @@ def game_loop():
                  playing = False
                  running = False
               if event.type == pygame.KEYDOWN:
-                 if event.key == pygame.K_UP:
+                 if event.key == pygame.K_UP and my_snake.speed_y != 1:  # Prevent the snake from reversing
                     my_snake.speed_x = 0
                     my_snake.speed_y = -1 # Move Up
-                 elif event.key == pygame.K_DOWN:
+                 elif event.key == pygame.K_DOWN and my_snake.speed_y != -1:
                     my_snake.speed_x = 0
                     my_snake.speed_y = 1  # Move Down
-                 elif event.key == pygame.K_LEFT:
+                 elif event.key == pygame.K_LEFT and my_snake.speed_x != 1:
                     my_snake.speed_x = -1 # Move Left
                     my_snake.speed_y = 0
-                 elif event.key == pygame.K_RIGHT:
+                 elif event.key == pygame.K_RIGHT and my_snake.speed_x != -1:
                     my_snake.speed_x = 1  # Move Right
                     my_snake.speed_y = 0
                     
-           my_snake.move()         
+           my_snake.move()
+           head_x = my_snake.body[0][0]
+           head_y = my_snake.body[0][1]
            #check if the snake has hit the wall
-           hit_wall = not (0 <= my_snake.x < SCREEN_WIDTH and 0 <= my_snake.y < SCREEN_HEIGHT)    
+           hit_wall = not (0 <= head_x < SCREEN_WIDTH and 0 <= head_y < SCREEN_HEIGHT)    
            if hit_wall:
                 playing = False
                 print("Game Over!")   
-                  
+           for segment in my_snake.body[1:]:  # Check for collision with itself
+              if head_x == segment[0] and head_y == segment[1]:
+                 playing = False
+                 print("Game Over!")
+           #EGG COLLISION LOGIC
+           snake_rect = pygame.Rect(head_x, head_y, my_snake.width, my_snake.height)
+           Egg_rect = pygame.Rect(my_egg.x - my_egg.radius, my_egg.y - my_egg.radius, my_egg.radius * 2, my_egg.radius * 2)
+           if snake_rect.colliderect(Egg_rect): 
+              print("Nom!")
+              my_egg.reset()
+              my_snake.grow()  
+                          
            if playing:
              screen.fill((0, 0, 0))
              my_egg.draw(screen)  
