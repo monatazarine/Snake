@@ -1,6 +1,8 @@
 
 import pygame
 import sys
+
+
 from Egg import Egg
 from Snake import Snake
 
@@ -40,7 +42,6 @@ EX_text_rect = EX_button_text.get_rect(center=EX_button.center)
 
 playing = False
 running = True
-
 def game_loop():
     global playing, running      
 
@@ -72,7 +73,12 @@ def game_loop():
            hit_wall = not (0 <= my_snake.x < SCREEN_WIDTH and 0 <= my_snake.y < SCREEN_HEIGHT)    
            if hit_wall:
                 playing = False
-                print("Game Over!")   
+                print("Game Over!")  
+           #check if the snake has eaten the egg      
+           HEAD = pygame.Rect(my_snake.x, my_snake.y, my_snake.width, my_snake.height)
+           EGG = pygame.Rect(my_egg.x - my_egg.radius, my_egg.y - my_egg.radius, my_egg.radius * 2, my_egg.radius * 2) 
+           if HEAD.colliderect(EGG):
+                   my_egg.reset()
                   
            if playing:
              screen.fill((0, 0, 0))
