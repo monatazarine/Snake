@@ -34,14 +34,14 @@ text_rect = ST_button_text.get_rect(center=ST_button.center)
 
 EX_button_text = pygame.font.SysFont(None, 36).render("Exit", True, WHITE)
 EX_text_rect = EX_button_text.get_rect(center=EX_button.center)
-
-
+game_font = pygame.font.SysFont("Arial", 26, bold=True)
+score_value = 0
 
 playing = False
 running = True
 
 def game_loop():
-    global playing, running      
+    global playing, running  ,score_value    
     my_egg = Egg()  
     my_snake = Snake()      
 
@@ -94,7 +94,7 @@ def game_loop():
            Egg_rect = pygame.Rect(my_egg.x - my_egg.radius, my_egg.y - my_egg.radius, my_egg.radius * 2, my_egg.radius * 2)
            if snake_rect.colliderect(Egg_rect): 
               if my_snake.speed_x != 0 or my_snake.speed_y != 0:  # Only grow if the snake is moving
-               print("Nom!")
+               score_value += 1
                my_egg.reset()
                my_snake.grow()  
                           
@@ -102,6 +102,8 @@ def game_loop():
            screen.fill((0, 0, 0))
            my_egg.draw(screen)  
            my_snake.draw(screen)
+           score_text = game_font.render(f"Score: {score_value}", True, WHITE)  
+           screen.blit(score_text, (20, 20)) 
            pygame.display.update()  
               
 
